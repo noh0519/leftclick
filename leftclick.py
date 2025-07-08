@@ -23,13 +23,13 @@ def get_console_window():
         # 먼저 kernel32.dll에서 GetConsoleWindow 함수 직접 호출 시도
         kernel32 = ctypes.windll.kernel32
         hwnd = kernel32.GetConsoleWindow()
-        
         # 유효한 핸들인지 확인
         if hwnd != 0:
             try:
                 # 창이 실제로 존재하는지 확인
                 rect = win32gui.GetWindowRect(hwnd)
-                if rect[2] > rect[0] and rect[3] > rect[1]:  # 유효한 크기인지 확인
+                # 유효한 크기인지 확인
+                if rect[2] > rect[0] and rect[3] > rect[1]:
                     return hwnd
             except:
                 pass
@@ -124,7 +124,8 @@ def restore_window_position():
     except Exception as e:
         print(f"Failed to restore window position: {e}")
 
-# 프로그램 종료 시 창 위치 저장
+# 프로그램 종료 시 창 위치 저장 (정상 종료용)
+# Ctrl + C 입력시에도 KeyboardInterrupt 예외 처리 후 정상 종료 하므로 해당 코드 실행됨
 atexit.register(save_window_position)
 
 # 프로그램 시작 시 창 위치 복원
@@ -139,26 +140,6 @@ try:
         print('Left Click!')
         pyautogui.leftClick()
 except KeyboardInterrupt:
-    save_window_position()  # 수동 종료 시에도 위치 저장
-    print('Exit Macro')
+    print('Interrupted by user')
 
-
-'''
-mpos = [[1200, 800], [3600, 800]]
-stime = 60
-try:
-    while 1:
-        for mx, my in mpos:
-            pyautogui.leftClick(x=mx,y=my)
-            time.sleep(stime)
-except KeyboardInterrupt:
-    print('Exit MyMacro')
-'''
-
-
-'''
-while 1:
-    position = pyautogui.position()
-    print(position)
-    time.sleep(3)
-'''
+# input('Press Enter to exit...')
